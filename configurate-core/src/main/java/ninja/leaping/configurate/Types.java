@@ -16,6 +16,14 @@
  */
 package ninja.leaping.configurate;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.time.DateTimeException;
+import java.time.Instant;
+import java.time.format.DateTimeParseException;
+import java.time.temporal.*;
+import java.util.Date;
+
 /**
  * Contains functions useful for performing configuration type conversions.
  * The naming scheme is as follows:
@@ -219,5 +227,70 @@ public class Types {
         }
 
         return value instanceof Boolean ? (Boolean) value : null;
+    }
+
+    public static Date asDate(Object value) {
+        if (value == null) return null;
+        if (value instanceof Date) {
+            return (Date) value;
+        }
+        if (value instanceof TemporalAccessor) {
+            TemporalAccessor temp = (TemporalAccessor) value;
+            if (temp.isSupported(ChronoField.INSTANT_SECONDS)) {
+                long millis = temp.get(ChronoField.INSTANT_SECONDS) * 1000;
+                if (temp.isSupported(ChronoField.MILLI_OF_SECOND)) {
+                    millis += temp.get(ChronoField.MILLI_OF_SECOND);
+                }
+                return new Date(millis);
+            }
+        }
+        if (value instanceof Number) {
+            return new Date(((Number) value).longValue());
+        }
+        String dateString = value.toString();
+        try {
+            return DateFormat.getInstance().parse(dateString);
+        } catch (ParseException ex) {
+            return null;
+        }
+    }
+
+    public static Date strictAsDate(Object value) {
+        if (value == null) {
+            return null;
+        }
+
+        return value instanceof Date ? (Date) value : null;
+    }
+
+    public static Instant asInstant(Object value) {
+        if (value == null) return null;
+        if (value instanceof Instant) {
+            return (Instant) value;
+        }
+        if (value instanceof Date) {
+            return Instant.ofEpochMilli(((Date) value).getTime());
+        }
+        if (value instanceof TemporalAccessor) {
+            try {
+                return Instant.from((TemporalAccessor) value);
+            } catch (DateTimeException ex) {
+                return null;
+            }
+        }
+        String dateString = value.toString();
+        try {
+            return Instant.parse(dateString);
+        } catch (DateTimeParseException ex) {
+            return null;
+        }
+    }
+
+    public static Instant strictAsInstant(Object value) {
+        if (value == null) {
+            return null;
+        }
+
+        return value instanceof Instant ? (Instant) value : null;
     }
 }
