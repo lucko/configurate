@@ -73,6 +73,7 @@
         <module>configurate-hocon</module>
         <module>configurate-json</module>
         <module>configurate-gson</module>
+        <module>configurate-xml</module>
     </modules>
 
     <reporting>
