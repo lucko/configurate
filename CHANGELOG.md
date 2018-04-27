@@ -1,6 +1,13 @@
 Changelog
 ========
 
+3.4
+---
+- Implemented a loader for the XML format (upstream PR #90)
+- A considerable number of improvements to the projects JavaDocs (upstream PR #92)
+- Changed the TypeSerializerCollection to select from available type serializers in the order they were added (upstream PR #88)
+- Introduced more consistent formatting in the build scripts (upstream PR #92)
+
 3.3
 ---
 - Update Maven and various Maven plugins

@@ -1,12 +1,14 @@
 # Configurate
 Configurate is a simple configuration library released under the [Apache 2.0](LICENSE) that provides a node-tree representation of configurations in a variety of formats.
 
-*Build Status*: [![Travis CI](https://travis-ci.org/SpongePowered/configurate.svg)](https://travis-ci.org/SpongePowered/configurate)
+The upstream repository is located at [SpongePowered/configurate](https://github.com/SpongePowered/configurate) - but doesn't seem to be receiving any updates.
 
-*Javadocs*: http://configurate.aoeu.xyz/apidocs
+This fork of configurate contains the following changes:
 
-Want to talk to us about Configurate? Come to the `#dev-irc` channel in our [Discord](https://discord.gg/PtaGRAs) or the `#spongedev` channel on `irc.esper.net` where people familiar with the project will hang around.
-
+* Implemented a loader for the XML format (upstream PR #90)
+* A considerable number of improvements to the projects JavaDocs (upstream PR #92)
+* Changed the TypeSerializerCollection to select from available type serializers in the order they were added (upstream PR #88)
+* Introduced more consistent formatting in the build scripts (upstream PR #92)
 
 ## Building
 We use Maven, so this part is pretty easy. 
@@ -20,9 +22,9 @@ Make sure Maven is installed and from the project's directory (the root of this 
 **Maven**:
 ```xml
 <dependency>
-    <groupId>ninja.leaping.configurate</groupId>
+    <groupId>me.lucko.configurate</groupId>
     <artifactId>configurate-hocon</artifactId>
-    <version>3.3</version> <!-- Update this with the most recent version -->
+    <version>3.4</version>
 </dependency>
 ``` 
 
@@ -33,11 +35,9 @@ repositories {
 }
 
 dependencies {
-    compile 'ninja.leaping.configurate:configurate-hocon:3.3'
+    compile 'me.lucko.configurate:configurate-hocon:3.4'
 }
 ```
-
-For other build systems, take a look at the [full list on the Configurate site](http://configurate.aoeu.xyz/configurate-hocon/dependency-info.html)
 
 This dependency statement is for the hocon format implementation. Other formats managed in this repository use the same group id and versioning.
 
@@ -48,6 +48,7 @@ CommentedConfigurationNode node = loader.load(); // Load the configuration into 
 
 node.getNode("some", "value").getValue(); // Get the value
 ```
+
 More detailed explanations of all the methods available in ConfigurationNode are available in the javadocs.
 
 ## Contributing
@@ -56,4 +57,3 @@ We love PRs! However, when contributing, here are some things to keep in mind:
 - Take a look at open issues first before you get too far in -- someone might already be working on what you were planning on doing
 - In general, we follow the Oracle style guidelines for code style
 - Please, please, please test PRs. It makes the process a lot easier for everybody :)
-
