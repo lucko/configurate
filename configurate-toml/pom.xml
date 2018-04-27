@@ -22,7 +22,7 @@
     <parent>
         <artifactId>configurate-parent</artifactId>
         <groupId>me.lucko.configurate</groupId>
-        <version>3.4</version>
+        <version>3.5-SNAPSHOT</version>
     </parent>
 
     <artifactId>configurate-toml</artifactId>
