@@ -163,10 +163,10 @@ public class HoconConfigurationLoader extends AbstractConfigurationLoader<Commen
     private final ConfigRenderOptions render;
     private final ConfigParseOptions parse;
 
-    private HoconConfigurationLoader(Builder build) {
-        super(build, new CommentHandler[] {CommentHandlers.HASH, CommentHandlers.DOUBLE_SLASH});
-        this.render = build.getRenderOptions();
-        this.parse = build.getParseOptions();
+    private HoconConfigurationLoader(Builder builder) {
+        super(builder, new CommentHandler[] {CommentHandlers.HASH, CommentHandlers.DOUBLE_SLASH});
+        this.render = builder.getRenderOptions();
+        this.parse = builder.getParseOptions();
     }
 
     @Override

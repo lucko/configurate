@@ -1,4 +1,4 @@
-/**
+/*
  * Configurate
  * Copyright (C) zml and Configurate contributors
  *
@@ -17,20 +17,23 @@
 package ninja.leaping.configurate.attributed;
 
 import ninja.leaping.configurate.ConfigurationNode;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.List;
 import java.util.Map;
 
 /**
- * A configuration node that is capable of having attributes
+ * A configuration node that can have attributes attached to it.
  */
 public interface AttributedConfigurationNode extends ConfigurationNode {
 
     /**
      * Gets the tag name of this node.
      *
-     * @return the tag name
+     * @return The tag name
      */
+    @NonNull
     String getTagName();
 
     /**
@@ -40,38 +43,42 @@ public interface AttributedConfigurationNode extends ConfigurationNode {
      * {@link #getChildrenMap() child map}, as the corresponding key is used as
      * the tag name.</p>
      *
-     * @param name the name to set, cannot be null
+     * @param name The name to set, cannot be null
      * @return this
      */
-    AttributedConfigurationNode setTagName(String name);
+    @NonNull
+    AttributedConfigurationNode setTagName(@NonNull String name);
 
     /**
-     * Adds an attribute to this node
+     * Adds an attribute to this node.
      *
-     * @param name the name of the attribute
-     * @param value the value of the attribute
+     * @param name The name of the attribute
+     * @param value The value of the attribute
      * @return this
      */
-    AttributedConfigurationNode addAttribute(String name, String value);
+    @NonNull
+    AttributedConfigurationNode addAttribute(@NonNull String name, @NonNull String value);
 
     /**
-     * Removes an attribute from this node
+     * Removes an attribute from this node.
      *
-     * @param name the name of the attribute to remove
+     * @param name The name of the attribute to remove
      * @return this
      */
-    AttributedConfigurationNode removeAttribute(String name);
+    @NonNull
+    AttributedConfigurationNode removeAttribute(@NonNull String name);
 
     /**
-     * Sets the attributes of this node
+     * Sets the attributes of this node.
      *
      * @param attributes the attributes to set
      * @return this
      */
-    AttributedConfigurationNode setAttributes(Map<String, String> attributes);
+    @NonNull
+    AttributedConfigurationNode setAttributes(@NonNull Map<String, String> attributes);
 
     /**
-     * Gets if this node has any attributes
+     * Gets if this node has any attributes.
      *
      * @return true if this node has any attributes
      */
@@ -79,35 +86,30 @@ public interface AttributedConfigurationNode extends ConfigurationNode {
 
     /**
      * Gets the value of an attribute, or null if this node doesn't have the
-     * given attribute
+     * given attribute.
      *
-     * @param name the name of the attribute to get
+     * @param name The name of the attribute to get
      * @return this
      */
-    String getAttribute(String name);
+    @Nullable
+    String getAttribute(@NonNull String name);
 
     /**
-     * Gets the attributes this node has
+     * Gets the attributes this node has.
      *
      * <p>The returned map is immutable.</p>
      *
-     * @return this
+     * @return The map of attributes
      */
+    @NonNull
     Map<String, String> getAttributes();
 
     // Methods from superclass overridden to have correct return types
-
-    AttributedConfigurationNode getParent();
-    @Override
-    List<? extends AttributedConfigurationNode> getChildrenList();
-    @Override
-    Map<Object, ? extends AttributedConfigurationNode> getChildrenMap();
-    @Override
-    AttributedConfigurationNode setValue(Object value);
-    @Override
-    AttributedConfigurationNode mergeValuesFrom(ConfigurationNode other);
-    @Override
-    AttributedConfigurationNode getAppendedNode();
-    @Override
-    AttributedConfigurationNode getNode(Object... path);
+    @Nullable @Override AttributedConfigurationNode getParent();
+    @NonNull @Override List<? extends AttributedConfigurationNode> getChildrenList();
+    @NonNull @Override Map<Object, ? extends AttributedConfigurationNode> getChildrenMap();
+    @NonNull @Override AttributedConfigurationNode setValue(@Nullable Object value);
+    @NonNull @Override AttributedConfigurationNode mergeValuesFrom(@NonNull ConfigurationNode other);
+    @NonNull @Override AttributedConfigurationNode getAppendedNode();
+    @NonNull @Override AttributedConfigurationNode getNode(@NonNull Object... path);
 }

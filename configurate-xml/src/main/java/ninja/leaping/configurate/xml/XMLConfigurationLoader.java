@@ -117,7 +117,7 @@ public class XMLConfigurationLoader extends AbstractConfigurationLoader<Attribut
          * @return This builder (for chaining)
          */
         @NonNull
-        public Builder setSchema(Schema schema) {
+        public Builder setSchema(@NonNull Schema schema) {
             this.schema = schema;
             return this;
         }
@@ -139,7 +139,7 @@ public class XMLConfigurationLoader extends AbstractConfigurationLoader<Attribut
          * @return This builder (for chaining)
          */
         @NonNull
-        public Builder setDefaultTagName(String defaultTagName) {
+        public Builder setDefaultTagName(@NonNull String defaultTagName) {
             this.defaultTagName = defaultTagName;
             return this;
         }
@@ -165,11 +165,11 @@ public class XMLConfigurationLoader extends AbstractConfigurationLoader<Attribut
     private final String defaultTagName;
     private final int indent;
 
-    private XMLConfigurationLoader(Builder build) {
-        super(build, new CommentHandler[] {CommentHandlers.HASH, CommentHandlers.DOUBLE_SLASH});
-        this.schema = build.getSchema();
-        this.defaultTagName = build.getDefaultTagName();
-        this.indent = build.getIndent();
+    private XMLConfigurationLoader(Builder builder) {
+        super(builder, new CommentHandler[] {CommentHandlers.HASH, CommentHandlers.DOUBLE_SLASH});
+        this.schema = builder.getSchema();
+        this.defaultTagName = builder.getDefaultTagName();
+        this.indent = builder.getIndent();
     }
 
     private DocumentBuilder newDocumentBuilder() {
@@ -294,8 +294,9 @@ public class XMLConfigurationLoader extends AbstractConfigurationLoader<Attribut
         return element;
     }
 
+    @NonNull
     @Override
-    public AttributedConfigurationNode createEmptyNode(ConfigurationOptions options) {
+    public AttributedConfigurationNode createEmptyNode(@NonNull ConfigurationOptions options) {
         options = options.setAcceptedTypes(ImmutableSet.of(Double.class, Long.class,
                 Integer.class, Boolean.class, String.class, Number.class));
         return SimpleAttributedConfigurationNode.root("root", options);

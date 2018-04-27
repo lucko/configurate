@@ -6,6 +6,7 @@ The upstream repository is located at [SpongePowered/configurate](https://github
 This fork of configurate contains the following changes:
 
 * Implemented a loader for the XML format (upstream PR #90)
+* Implemented a loader for the TOML format (upstream PR #69)
 * A considerable number of improvements to the projects JavaDocs (upstream PR #92)
 * Changed the TypeSerializerCollection to select from available type serializers in the order they were added (upstream PR #88)
 * Introduced more consistent formatting in the build scripts (upstream PR #92)

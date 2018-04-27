@@ -1,4 +1,4 @@
-/**
+/*
  * Configurate
  * Copyright (C) zml and Configurate contributors
  *
@@ -18,46 +18,52 @@ package ninja.leaping.configurate.attributed;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
-
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.ConfigurationOptions;
 import ninja.leaping.configurate.SimpleConfigurationNode;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
- * Represents a configuration node containing comments
+ * Basic implementation of {@link AttributedConfigurationNode}.
  */
 public class SimpleAttributedConfigurationNode extends SimpleConfigurationNode implements AttributedConfigurationNode {
     private String tagName;
     private final Map<String, String> attributes = new HashMap<>();
 
+    @NonNull
     public static SimpleAttributedConfigurationNode root() {
         return root("root", ConfigurationOptions.defaults());
     }
 
-    public static SimpleAttributedConfigurationNode root(String tagName) {
+    @NonNull
+    public static SimpleAttributedConfigurationNode root(@NonNull String tagName) {
         return root(tagName, ConfigurationOptions.defaults());
     }
 
-    public static SimpleAttributedConfigurationNode root(String tagName, ConfigurationOptions options) {
+    @NonNull
+    public static SimpleAttributedConfigurationNode root(@NonNull String tagName, @NonNull ConfigurationOptions options) {
         return new SimpleAttributedConfigurationNode(tagName, null, null, options);
     }
 
-    protected SimpleAttributedConfigurationNode(String tagName, Object path, SimpleConfigurationNode parent, ConfigurationOptions options) {
+    protected SimpleAttributedConfigurationNode(@NonNull String tagName, @Nullable Object path, @Nullable SimpleConfigurationNode parent, @NonNull ConfigurationOptions options) {
         super(path, parent, options);
         this.tagName = tagName;
     }
 
+    @NonNull
     @Override
     public String getTagName() {
         return tagName;
     }
 
+    @NonNull
     @Override
-    public SimpleAttributedConfigurationNode setTagName(String tagName) {
+    public SimpleAttributedConfigurationNode setTagName(@NonNull String tagName) {
         if (Strings.isNullOrEmpty(tagName)) {
             throw new IllegalArgumentException("Tag name cannot be null/empty");
         }
@@ -66,8 +72,9 @@ public class SimpleAttributedConfigurationNode extends SimpleConfigurationNode i
         return this;
     }
 
+    @NonNull
     @Override
-    public SimpleAttributedConfigurationNode addAttribute(String name, String value) {
+    public SimpleAttributedConfigurationNode addAttribute(@NonNull String name, @NonNull String value) {
         if (Strings.isNullOrEmpty(name)) {
             throw new IllegalArgumentException("Attribute name cannot be null/empty");
         }
@@ -76,14 +83,16 @@ public class SimpleAttributedConfigurationNode extends SimpleConfigurationNode i
         return this;
     }
 
+    @NonNull
     @Override
-    public SimpleAttributedConfigurationNode removeAttribute(String name) {
+    public SimpleAttributedConfigurationNode removeAttribute(@NonNull String name) {
         attributes.remove(name);
         return this;
     }
 
+    @NonNull
     @Override
-    public SimpleAttributedConfigurationNode setAttributes(Map<String, String> attributes) {
+    public SimpleAttributedConfigurationNode setAttributes(@NonNull Map<String, String> attributes) {
         for (String name : attributes.keySet()) {
             if (Strings.isNullOrEmpty(name)) {
                 throw new IllegalArgumentException("Attribute name cannot be null/empty");
@@ -100,16 +109,21 @@ public class SimpleAttributedConfigurationNode extends SimpleConfigurationNode i
         return !attributes.isEmpty();
     }
 
+    @Nullable
     @Override
-    public String getAttribute(String name) {
+    public String getAttribute(@NonNull String name) {
         return attributes.get(name);
     }
 
+    @NonNull
     @Override
     public Map<String, String> getAttributes() {
         return ImmutableMap.copyOf(attributes);
     }
 
+    // Methods from superclass overridden to have correct return types
+
+    @Nullable
     @Override
     public SimpleAttributedConfigurationNode getParent() {
         return (SimpleAttributedConfigurationNode) super.getParent();
@@ -120,8 +134,9 @@ public class SimpleAttributedConfigurationNode extends SimpleConfigurationNode i
         return new SimpleAttributedConfigurationNode("element", path, this, getOptions());
     }
 
+    @NonNull
     @Override
-    public SimpleAttributedConfigurationNode setValue(Object value) {
+    public SimpleAttributedConfigurationNode setValue(@Nullable Object value) {
         if (value instanceof AttributedConfigurationNode) {
             AttributedConfigurationNode node = (AttributedConfigurationNode) value;
             setTagName(node.getTagName());
@@ -130,8 +145,9 @@ public class SimpleAttributedConfigurationNode extends SimpleConfigurationNode i
         return (SimpleAttributedConfigurationNode) super.setValue(value);
     }
 
+    @NonNull
     @Override
-    public SimpleAttributedConfigurationNode mergeValuesFrom(ConfigurationNode other) {
+    public SimpleAttributedConfigurationNode mergeValuesFrom(@NonNull ConfigurationNode other) {
         if (other instanceof AttributedConfigurationNode) {
             AttributedConfigurationNode node = (AttributedConfigurationNode) other;
             setTagName(node.getTagName());
@@ -142,23 +158,27 @@ public class SimpleAttributedConfigurationNode extends SimpleConfigurationNode i
         return (SimpleAttributedConfigurationNode) super.mergeValuesFrom(other);
     }
 
+    @NonNull
     @Override
-    public SimpleAttributedConfigurationNode getNode(Object... path) {
+    public SimpleAttributedConfigurationNode getNode(@NonNull Object... path) {
         return (SimpleAttributedConfigurationNode) super.getNode(path);
     }
 
+    @NonNull
     @Override
     @SuppressWarnings("unchecked")
     public List<? extends SimpleAttributedConfigurationNode> getChildrenList() {
         return (List<SimpleAttributedConfigurationNode>) super.getChildrenList();
     }
 
+    @NonNull
     @Override
     @SuppressWarnings("unchecked")
     public Map<Object, ? extends SimpleAttributedConfigurationNode> getChildrenMap() {
         return (Map<Object, SimpleAttributedConfigurationNode>) super.getChildrenMap();
     }
 
+    @NonNull
     @Override
     public SimpleAttributedConfigurationNode getAppendedNode() {
         return (SimpleAttributedConfigurationNode) super.getAppendedNode();
