@@ -19,7 +19,9 @@ package ninja.leaping.configurate.objectmapping.serialize;
 import com.google.common.base.Preconditions;
 import com.google.common.reflect.TypeToken;
 
+import java.lang.reflect.Method;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Function;
@@ -97,12 +99,11 @@ public class TypeSerializerCollection {
         }
 
         private RegisteredSerializer(TypeToken<?> type, TypeSerializer<?> serializer) {
-            this(type::isSupertypeOf, serializer);
+            this(new SuperTypePredicate(type), serializer);
         }
     }
 
-    private final class SerializerList extends CopyOnWriteArrayList<RegisteredSerializer>
-            implements Function<TypeToken<?>, TypeSerializer<?>> {
+    private final class SerializerList extends CopyOnWriteArrayList<RegisteredSerializer> implements Function<TypeToken<?>, TypeSerializer<?>> {
 
         @Override
         public TypeSerializer<?> apply(TypeToken<?> type) {
@@ -112,6 +113,45 @@ public class TypeSerializerCollection {
                 }
             }
             return null;
+        }
+    }
+
+    /**
+     * Effectively a predicate which is <code>type::isSupertypeOf</code>.
+     *
+     * <p>The isSupertypeOf method was only added in Guava 19.0, and was previously named
+     * isAssignableFrom.</p>
+     */
+    private static final class SuperTypePredicate implements Predicate<TypeToken<?>> {
+        private static final Method SUPERTYPE_TEST;
+        static {
+            Method supertypeTest;
+            try {
+                supertypeTest = TypeToken.class.getMethod("isSupertypeOf", TypeToken.class);
+            } catch (NoSuchMethodException e) {
+                try {
+                    supertypeTest = TypeToken.class.getMethod("isAssignableFrom", TypeToken.class);
+                } catch (NoSuchMethodException ignored) {
+                    supertypeTest = null;
+                }
+            }
+            SUPERTYPE_TEST = Objects.requireNonNull(supertypeTest);
+        }
+
+        private final TypeToken<?> type;
+
+        private SuperTypePredicate(TypeToken<?> type) {
+            this.type = type;
+        }
+
+        @Override
+        public boolean test(TypeToken<?> t) {
+            try {
+                return (boolean) SUPERTYPE_TEST.invoke(type, t);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
+            }
         }
     }
 
