@@ -9,6 +9,7 @@ This fork of configurate contains the following changes:
 * A considerable number of improvements to the projects JavaDocs (upstream PR #92)
 * Changed the TypeSerializerCollection to select from available type serializers in the order they were added (upstream PR #88)
 * Introduced more consistent formatting in the build scripts (upstream PR #92)
+* Fix object mapping for interface/abstract field types (upstream PR #91 by @dags-)
 
 ## Building
 We use Maven, so this part is pretty easy. 
