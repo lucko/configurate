@@ -60,6 +60,10 @@ public class TypeSerializers {
         return DEFAULT_SERIALIZERS;
     }
 
+    public static TypeSerializerCollection newCollection() {
+        return DEFAULT_SERIALIZERS.newChild();
+    }
+
     static {
         DEFAULT_SERIALIZERS.registerType(TypeToken.of(URI.class), new URISerializer());
         DEFAULT_SERIALIZERS.registerType(TypeToken.of(URL.class), new URLSerializer());
