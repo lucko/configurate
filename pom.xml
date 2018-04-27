@@ -20,9 +20,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>ninja.leaping.configurate</groupId>
+    <groupId>me.lucko.configurate</groupId>
     <artifactId>configurate-parent</artifactId>
-    <version>3.4-SNAPSHOT</version>
+    <version>3.4</version>
 
     <modules>
         <module>configurate-core</module>
@@ -37,7 +37,7 @@
     <name>Configurate Parent</name>
     <description>A simple configuration library for Java applications that can handle a variety of formats and
         provides a node-based data structure able to handle a wide variety of configuration schemas</description>
-    <url>http://configurate.aoeu.xyz/${siteUrlSuffix}/</url>
+    <url>https://github.com/lucko/configurate</url>
     <inceptionYear>2014</inceptionYear>
 
     <licenses>
@@ -60,7 +60,6 @@
         <gitUser>lucko</gitUser>
         <gitProject>configurate</gitProject>
         <gitUrl>${gitUser}/${gitProject}</gitUrl>
-        <siteUrlSuffix />
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -76,36 +75,11 @@
             <id>ossrh</id>
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
     </distributionManagement>
-
-    <reporting>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.10.4</version>
-                <reportSets>
-                    <reportSet><!-- by default, id = "default" -->
-                        <reports><!-- select non-aggregate reports -->
-                            <report>javadoc</report>
-                        </reports>
-                    </reportSet>
-                    <reportSet><!-- aggregate reportSet, to define in poms having modules -->
-                        <id>aggregate</id>
-                        <inherited>false</inherited><!-- don't run aggregate in child modules -->
-                        <reports>
-                            <report>aggregate</report>
-                        </reports>
-                    </reportSet>
-                </reportSets>
-                <configuration>
-                    <links>
-                        <link>http://google.github.io/guava/releases/21.0/api/docs/</link>
-                    </links>
-                </configuration>
-            </plugin>
-        </plugins>
-    </reporting>
 
     <dependencies>
         <dependency>
@@ -155,17 +129,6 @@
                         <phase>process-sources</phase>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <artifactId>maven-release-plugin</artifactId>
-                <version>2.5.3</version>
-                <configuration>
-                    <autoVersionSubmodules>true</autoVersionSubmodules>
-                    <tagNameFormat>@{project.version}</tagNameFormat>
-                    <scmCommentPrefix xml:space="preserve">[RELEASE] </scmCommentPrefix>
-                    <goals>install deploy site-deploy</goals>
-                    <releaseProfiles>release</releaseProfiles>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -246,17 +209,6 @@
                                 </goals>
                             </execution>
                         </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.sonatype.plugins</groupId>
-                        <artifactId>nexus-staging-maven-plugin</artifactId>
-                        <version>1.6.8</version>
-                        <extensions>true</extensions>
-                        <configuration>
-                            <serverId>ossrh</serverId>
-                            <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
-                        </configuration>
                     </plugin>
                 </plugins>
             </build>

@@ -21,8 +21,8 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <artifactId>configurate-parent</artifactId>
-        <groupId>ninja.leaping.configurate</groupId>
-        <version>3.4-SNAPSHOT</version>
+        <groupId>me.lucko.configurate</groupId>
+        <version>3.4</version>
     </parent>
 
     <artifactId>configurate-toml</artifactId>
@@ -31,7 +31,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>ninja.leaping.configurate</groupId>
+            <groupId>me.lucko.configurate</groupId>
             <artifactId>configurate-core</artifactId>
             <version>${project.parent.version}</version>
         </dependency>

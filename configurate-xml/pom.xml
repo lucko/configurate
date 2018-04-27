@@ -20,9 +20,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>ninja.leaping.configurate</groupId>
+        <groupId>me.lucko.configurate</groupId>
         <artifactId>configurate-parent</artifactId>
-        <version>3.4-SNAPSHOT</version>
+        <version>3.4</version>
     </parent>
 
     <artifactId>configurate-xml</artifactId>
@@ -31,7 +31,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>ninja.leaping.configurate</groupId>
+            <groupId>me.lucko.configurate</groupId>
             <artifactId>configurate-core</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
