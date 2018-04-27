@@ -1,4 +1,4 @@
-/**
+/*
  * Configurate
  * Copyright (C) zml and Configurate contributors
  *
@@ -22,6 +22,7 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
 import com.google.common.math.DoubleMath;
 
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -57,15 +58,29 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.validation.Schema;
 
 /**
- * A loader for XML (Extensible Markup Language)
+ * A loader for XML (Extensible Markup Language), using the native javax library for parsing and
+ * generation.
  */
 public class XMLConfigurationLoader extends AbstractConfigurationLoader<AttributedConfigurationNode> {
+
+    /**
+     * The property used to mark how many spaces should be used to indent.
+     */
     private static final String INDENT_PROPERTY = "{http://xml.apache.org/xslt}indent-amount";
 
-    private final Schema schema;
-    private final String defaultTagName;
-    private final int indent;
+    /**
+     * Creates a new {@link XMLConfigurationLoader} builder.
+     *
+     * @return A new builder
+     */
+    @NonNull
+    public static Builder builder() {
+        return new Builder();
+    }
 
+    /**
+     * Builds a {@link XMLConfigurationLoader}.
+     */
     public static class Builder extends AbstractConfigurationLoader.Builder<Builder> {
         private Schema schema = null;
         private String defaultTagName = "element";
@@ -74,42 +89,81 @@ public class XMLConfigurationLoader extends AbstractConfigurationLoader<Attribut
         protected Builder() {
         }
 
-        public Schema getSchema() {
-            return schema;
-        }
-
-        public Builder setSchema(Schema schema) {
-            this.schema = schema;
-            return this;
-        }
-
-        public String getDefaultTagName() {
-            return defaultTagName;
-        }
-
-        public Builder setDefaultTagName(String defaultTagName) {
-            this.defaultTagName = defaultTagName;
-            return this;
-        }
-
-        public int getIndent() {
-            return indent;
-        }
-
+        /**
+         * Sets the level of indentation the resultant loader should use.
+         *
+         * @param indent The indent level
+         * @return This builder (for chaining)
+         */
+        @NonNull
         public Builder setIndent(int indent) {
             this.indent = indent;
             return this;
         }
 
+        /**
+         * Gets the level of indentation to be used by the resultant loader.
+         *
+         * @return The indent level
+         */
+        public int getIndent() {
+            return indent;
+        }
+
+        /**
+         * Sets the {@link Schema} the resultant loader should use.
+         *
+         * @param schema The schema
+         * @return This builder (for chaining)
+         */
+        @NonNull
+        public Builder setSchema(Schema schema) {
+            this.schema = schema;
+            return this;
+        }
+
+        /**
+         * Gets the {@link Schema} to be used by the resultant loader.
+         *
+         * @return The schema
+         */
+        @NonNull
+        public Schema getSchema() {
+            return schema;
+        }
+
+        /**
+         * Sets the default tag name the resultant loader should use.
+         *
+         * @param defaultTagName The default tag name
+         * @return This builder (for chaining)
+         */
+        @NonNull
+        public Builder setDefaultTagName(String defaultTagName) {
+            this.defaultTagName = defaultTagName;
+            return this;
+        }
+
+        /**
+         * Gets the default tag name to be used by the resultant loader.
+         *
+         * @return The default tag name
+         */
+        @NonNull
+        public String getDefaultTagName() {
+            return defaultTagName;
+        }
+
+        @NonNull
         @Override
         public XMLConfigurationLoader build() {
             return new XMLConfigurationLoader(this);
         }
     }
 
-    public static Builder builder() {
-        return new Builder();
-    }
+    private final Schema schema;
+    private final String defaultTagName;
+    private final int indent;
 
     private XMLConfigurationLoader(Builder build) {
         super(build, new CommentHandler[] {CommentHandlers.HASH, CommentHandlers.DOUBLE_SLASH});
