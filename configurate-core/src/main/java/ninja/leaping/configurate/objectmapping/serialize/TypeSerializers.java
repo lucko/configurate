@@ -279,6 +279,10 @@ public class TypeSerializers {
                     } catch (ClassNotFoundException e) {
                         throw new ObjectMappingException("Unknown class of object " + configuredName, e);
                     }
+                    if (!type.getRawType().isAssignableFrom(retClass)) {
+                        throw new ObjectMappingException("Configured type " + configuredName + " does not extend "
+                                + type.getRawType().getCanonicalName());
+                    }
                 }
             } else {
                 retClass = type.getRawType();
@@ -290,7 +294,8 @@ public class TypeSerializers {
         @SuppressWarnings("unchecked")
         public void serialize(@NonNull TypeToken<?> type, @Nullable Object obj, @NonNull ConfigurationNode value) throws ObjectMappingException {
             if (type.getRawType().isInterface() || Modifier.isAbstract(type.getRawType().getModifiers())) {
-                value.getNode("__class__").setValue(type.getRawType().getCanonicalName());
+                // serialize obj's concrete type rather than the interface/abstract class
+                value.getNode("__class__").setValue(obj.getClass().getName());
             }
             ((ObjectMapper<Object>) value.getOptions().getObjectMapperFactory().getMapper(obj.getClass())).bind(obj).serialize(value);
         }
