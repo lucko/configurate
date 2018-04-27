@@ -36,7 +36,9 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -76,6 +78,8 @@ public class TypeSerializers {
         DEFAULT_SERIALIZERS.registerType(new TypeToken<List<?>>() {}, new ListSerializer());
         DEFAULT_SERIALIZERS.registerType(new TypeToken<Enum<?>>() {}, new EnumValueSerializer());
         DEFAULT_SERIALIZERS.registerType(TypeToken.of(Pattern.class), new PatternSerializer());
+        DEFAULT_SERIALIZERS.registerType(TypeToken.of(Instant.class), new InstantSerializer());
+        DEFAULT_SERIALIZERS.registerType(TypeToken.of(Date.class), new DateSerializer());
     }
 
     private static class StringSerializer implements TypeSerializer<String> {
@@ -378,6 +382,32 @@ public class TypeSerializers {
         @Override
         public void serialize(@NonNull TypeToken<?> type, @Nullable Pattern obj, @NonNull ConfigurationNode value) throws ObjectMappingException {
             value.setValue(obj.pattern());
+        }
+    }
+
+    private static class InstantSerializer implements TypeSerializer<Instant> {
+
+        @Override
+        public Instant deserialize(TypeToken<?> type, ConfigurationNode value) throws ObjectMappingException {
+            return Types.asInstant(value.getValue());
+        }
+
+        @Override
+        public void serialize(TypeToken<?> type, Instant obj, ConfigurationNode value) throws ObjectMappingException {
+            value.setValue(obj);
+        }
+    }
+
+    private static class DateSerializer implements TypeSerializer<Date> {
+
+        @Override
+        public Date deserialize(TypeToken<?> type, ConfigurationNode value) throws ObjectMappingException {
+            return Types.asDate(value.getValue());
+        }
+
+        @Override
+        public void serialize(TypeToken<?> type, Date obj, ConfigurationNode value) throws ObjectMappingException {
+            value.setValue(obj);
         }
     }
 }

@@ -31,6 +31,7 @@
         <module>configurate-json</module>
         <module>configurate-gson</module>
         <module>configurate-xml</module>
+        <module>configurate-toml</module>
     </modules>
 
     <name>Configurate Parent</name>
@@ -181,7 +182,7 @@
                                 <requireMavenVersion>
                                     <version>3.5</version>
                                 </requireMavenVersion>
-                            </rules>    
+                            </rules>
                         </configuration>
                     </execution>
                 </executions>
