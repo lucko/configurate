@@ -17,13 +17,11 @@
 package ninja.leaping.configurate.xml;
 
 import com.google.common.io.Resources;
-
+import ninja.leaping.configurate.attributed.AttributedConfigurationNode;
+import ninja.leaping.configurate.loader.AtomicFiles;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-
-import ninja.leaping.configurate.attributed.AttributedConfigurationNode;
-import ninja.leaping.configurate.loader.AtomicFiles;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -35,9 +33,7 @@ import java.util.List;
 import java.util.Map;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * Basic sanity checks for the loader
@@ -53,6 +49,7 @@ public class XMLConfigurationLoaderTest {
         final Path saveTest = folder.newFile().toPath();
 
         XMLConfigurationLoader loader = XMLConfigurationLoader.builder()
+                .setWriteExplicitType(false)
                 .setIndent(4)
                 .setSource(() -> new BufferedReader(new InputStreamReader(url.openStream(), UTF_8)))
                 .setSink(AtomicFiles.createAtomicWriterFactory(saveTest, UTF_8)).build();
@@ -88,6 +85,36 @@ public class XMLConfigurationLoaderTest {
                 assertEquals("true", subNode.getAttribute("bold"));
             }
         }
+
+        // roundtrip!
+        loader.save(node);
+        assertEquals(Resources.readLines(url, UTF_8), Files.readAllLines(saveTest));
+    }
+
+    @Test
+    public void testExplicitTypes() throws IOException {
+        URL url = getClass().getResource("/example2.xml");
+        final Path saveTest = folder.newFile().toPath();
+
+        XMLConfigurationLoader loader = XMLConfigurationLoader.builder()
+                .setWriteExplicitType(true)
+                .setIndent(4)
+                .setSource(() -> new BufferedReader(new InputStreamReader(url.openStream(), UTF_8)))
+                .setSink(AtomicFiles.createAtomicWriterFactory(saveTest, UTF_8)).build();
+
+        AttributedConfigurationNode node = loader.load();
+
+        AttributedConfigurationNode list1 = node.getNode("list1");
+        assertTrue(list1.hasListChildren());
+
+        AttributedConfigurationNode list2 = node.getNode("list2");
+        assertTrue(list2.hasListChildren());
+
+        AttributedConfigurationNode map1 = node.getNode("map1");
+        assertTrue(map1.hasMapChildren());
+
+        AttributedConfigurationNode map2 = node.getNode("map2");
+        assertTrue(map2.hasMapChildren());
 
         // roundtrip!
         loader.save(node);

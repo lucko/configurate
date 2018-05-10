@@ -16,22 +16,12 @@
  */
 package ninja.leaping.configurate.xml;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
 import com.google.common.math.DoubleMath;
-
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.w3c.dom.Attr;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.ConfigurationOptions;
 import ninja.leaping.configurate.attributed.AttributedConfigurationNode;
@@ -39,11 +29,15 @@ import ninja.leaping.configurate.attributed.SimpleAttributedConfigurationNode;
 import ninja.leaping.configurate.loader.AbstractConfigurationLoader;
 import ninja.leaping.configurate.loader.CommentHandler;
 import ninja.leaping.configurate.loader.CommentHandlers;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.Writer;
-import java.util.Map;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -56,6 +50,10 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.validation.Schema;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.Writer;
+import java.util.Map;
 
 /**
  * A loader for XML (Extensible Markup Language), using the native javax library for parsing and
@@ -85,6 +83,8 @@ public class XMLConfigurationLoader extends AbstractConfigurationLoader<Attribut
         private Schema schema = null;
         private String defaultTagName = "element";
         private int indent = 2;
+        private boolean writeExplicitType = true;
+        private boolean includeXmlDeclaration = false;
 
         protected Builder() {
         }
@@ -117,7 +117,7 @@ public class XMLConfigurationLoader extends AbstractConfigurationLoader<Attribut
          * @return This builder (for chaining)
          */
         @NonNull
-        public Builder setSchema(@NonNull Schema schema) {
+        public Builder setSchema(@Nullable Schema schema) {
             this.schema = schema;
             return this;
         }
@@ -127,7 +127,7 @@ public class XMLConfigurationLoader extends AbstractConfigurationLoader<Attribut
          *
          * @return The schema
          */
-        @NonNull
+        @Nullable
         public Schema getSchema() {
             return schema;
         }
@@ -154,6 +154,56 @@ public class XMLConfigurationLoader extends AbstractConfigurationLoader<Attribut
             return defaultTagName;
         }
 
+        /**
+         * Sets if the resultant loader should write the explicit type of each node
+         * when saving nodes.
+         *
+         * <p>This is necessary in some cases, as XML has no explicit definition of an array or
+         * list. The loader is able to infer the type in some cases, but this is inaccurate in some
+         * cases, for example lists with only one element.</p>
+         *
+         * @param writeExplicitType If the loader should write explicit types
+         * @return This builder (for chaining)
+         */
+        @NonNull
+        public Builder setWriteExplicitType(boolean writeExplicitType) {
+            this.writeExplicitType = writeExplicitType;
+            return this;
+        }
+
+        /**
+         * Gets if explicit type attributes should be written by the resultant loader.
+         *
+         * <p>See the method doc for {@link #setWriteExplicitType(boolean)} for a more detailed
+         * explanation.</p>
+         *
+         * @return The default tag name
+         */
+        public boolean shouldWriteExplicitType() {
+            return writeExplicitType;
+        }
+
+        /**
+         * Sets if the resultant loader should include the XML declaration header when saving.
+         *
+         * @param includeXmlDeclaration If the XML declaration should be included
+         * @return This builder (for chaining)
+         */
+        @NonNull
+        public Builder setIncludeXmlDeclaration(boolean includeXmlDeclaration) {
+            this.includeXmlDeclaration = includeXmlDeclaration;
+            return this;
+        }
+
+        /**
+         * Gets if the resultant loader should include the XML declaration header when saving.
+         *
+         * @return If the XML declaration should be included
+         */
+        public boolean shouldIncludeXmlDeclaration() {
+            return includeXmlDeclaration;
+        }
+
         @NonNull
         @Override
         public XMLConfigurationLoader build() {
@@ -164,12 +214,16 @@ public class XMLConfigurationLoader extends AbstractConfigurationLoader<Attribut
     private final Schema schema;
     private final String defaultTagName;
     private final int indent;
+    private final boolean writeExplicitType;
+    private final boolean includeXmlDeclaration;
 
     private XMLConfigurationLoader(Builder builder) {
         super(builder, new CommentHandler[] {CommentHandlers.HASH, CommentHandlers.DOUBLE_SLASH});
         this.schema = builder.getSchema();
         this.defaultTagName = builder.getDefaultTagName();
         this.indent = builder.getIndent();
+        this.writeExplicitType = builder.shouldWriteExplicitType();
+        this.includeXmlDeclaration = builder.shouldIncludeXmlDeclaration();
     }
 
     private DocumentBuilder newDocumentBuilder() {
@@ -189,7 +243,9 @@ public class XMLConfigurationLoader extends AbstractConfigurationLoader<Attribut
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         try {
             Transformer transformer = transformerFactory.newTransformer();
-            transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+            if (!includeXmlDeclaration) {
+                transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+            }
             if (indent > 0) {
                 transformer.setOutputProperty(OutputKeys.INDENT, "yes");
                 transformer.setOutputProperty(INDENT_PROPERTY, Integer.toString(indent));
@@ -215,37 +271,86 @@ public class XMLConfigurationLoader extends AbstractConfigurationLoader<Attribut
         readElement(root, node);
     }
 
+    private enum NodeType {
+        MAP, LIST
+    }
+
     private void readElement(Node from, AttributedConfigurationNode to) {
+        NodeType type = null;
+
+        // copy the name of the tag
         to.setTagName(from.getNodeName());
+
+        // copy attributes
         if (from.hasAttributes()) {
             NamedNodeMap attributes = from.getAttributes();
             for (int i = 0; i < attributes.getLength(); i++) {
                 Node attribute = attributes.item(i);
-                to.addAttribute(attribute.getNodeName(), attribute.getNodeValue());
+                String key = attribute.getNodeName();
+                String value = attribute.getNodeValue();
+
+                // read the type of the node
+                if (key.equals("configurate-type")) {
+                    if (value.equals("map")) {
+                        type = NodeType.MAP;
+                    } else if (value.equals("list")) {
+                        type = NodeType.LIST;
+                    }
+
+                    // don't add internal configurate attributes to the node
+                    continue;
+                }
+
+                to.addAttribute(key, value);
             }
         }
 
+        // read out the child nodes into a multimap
+        Multimap<String, Node> children = MultimapBuilder.linkedHashKeys().arrayListValues().build();
         if (from.hasChildNodes()) {
             NodeList childNodes = from.getChildNodes();
-            Multimap<String, Node> nested = MultimapBuilder.linkedHashKeys().arrayListValues().build();
             for (int i = 0; i < childNodes.getLength(); i++) {
                 Node child = childNodes.item(i);
                 if (child.getNodeType() == Node.ELEMENT_NODE) {
-                    nested.put(child.getNodeName(), child);
+                    children.put(child.getNodeName(), child);
                 }
-            }
-
-            if (!nested.isEmpty()) {
-                // read to a map only if there are no duplicate keys
-                boolean map = nested.keys().size() == nested.keySet().size();
-                for (Map.Entry<String, Node> entry : nested.entries()) {
-                    readElement(entry.getValue(), map ? to.getNode(entry.getKey()) : to.getAppendedNode());
-                }
-                return;
             }
         }
 
-        to.setValue(parseValue(from.getTextContent()));
+        // if there are no child nodes present, assume it's a scalar value
+        if (children.isEmpty()) {
+            to.setValue(parseValue(from.getTextContent()));
+            return;
+        }
+
+        // if type is null, we need to infer what type the element is
+        if (type == null) {
+            // if there are no duplicate keys, we can infer that it is a map
+            // otherwise, assume it's a list
+            if (children.keys().size() == children.keySet().size()) {
+                type = NodeType.MAP;
+            } else {
+                type = NodeType.LIST;
+            }
+        }
+
+        if (type == NodeType.MAP) {
+            to.setValue(ImmutableMap.of());
+        } else {
+            to.setValue(ImmutableList.of());
+        }
+
+        // read out the elements
+        for (Map.Entry<String, Node> entry : children.entries()) {
+            AttributedConfigurationNode child;
+            if (type == NodeType.MAP) {
+                child = to.getNode(entry.getKey());
+            } else {
+                child = to.getAppendedNode();
+            }
+
+            readElement(entry.getValue(), child);
+        }
     }
 
     @Override
@@ -284,6 +389,9 @@ public class XMLConfigurationLoader extends AbstractConfigurationLoader<Attribut
                 element.appendChild(writeNode(document, child.getValue(), child.getKey().toString()));
             }
         } else if (node.hasListChildren()) {
+            if (writeExplicitType) {
+                element.setAttribute("configurate-type", "list");
+            }
             for (ConfigurationNode child : node.getChildrenList()) {
                 element.appendChild(writeNode(document, child, null));
             }
