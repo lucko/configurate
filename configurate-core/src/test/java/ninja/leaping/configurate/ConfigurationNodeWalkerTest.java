@@ -18,8 +18,8 @@ package ninja.leaping.configurate;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterators;
-import ninja.leaping.configurate.commented.CommentedConfigurationNode;
-import ninja.leaping.configurate.commented.SimpleCommentedConfigurationNode;
+import ninja.leaping.configurate.component.comment.Comment;
+import ninja.leaping.configurate.component.comment.SimpleComment;
 import ninja.leaping.configurate.util.ConfigurationNodeWalker;
 import org.junit.jupiter.api.Test;
 
@@ -94,7 +94,7 @@ public class ConfigurationNodeWalkerTest {
 
     @Test
     public void testWalker() {
-        CommentedConfigurationNode node = SimpleCommentedConfigurationNode.root();
+        Comment node = SimpleComment.root();
 
         node.getNode("l1-1").setValue(1);
         node.getNode("l1-1", "l2-1").setValue(1);
@@ -105,13 +105,13 @@ public class ConfigurationNodeWalkerTest {
         node.getNode("l1-2").setValue(1);
         node.getNode("l1-2", "l2-1").setValue(ImmutableList.of(1, 2, 3));
 
-        List<ConfigurationNodeWalker.VisitedNode<CommentedConfigurationNode>> breadthFirst = new ArrayList<>();
+        List<ConfigurationNodeWalker.VisitedNode<Comment>> breadthFirst = new ArrayList<>();
         Iterators.addAll(breadthFirst, ConfigurationNodeWalker.BREADTH_FIRST.walkWithPath(node));
 
-        List<ConfigurationNodeWalker.VisitedNode<CommentedConfigurationNode>> depthFirstPre = new ArrayList<>();
+        List<ConfigurationNodeWalker.VisitedNode<Comment>> depthFirstPre = new ArrayList<>();
         Iterators.addAll(depthFirstPre, ConfigurationNodeWalker.DEPTH_FIRST_PRE_ORDER.walkWithPath(node));
 
-        List<ConfigurationNodeWalker.VisitedNode<CommentedConfigurationNode>> depthFirstPost = new ArrayList<>();
+        List<ConfigurationNodeWalker.VisitedNode<Comment>> depthFirstPost = new ArrayList<>();
         Iterators.addAll(depthFirstPost, ConfigurationNodeWalker.DEPTH_FIRST_POST_ORDER.walkWithPath(node));
 
         assertEquals(13, breadthFirst.size());

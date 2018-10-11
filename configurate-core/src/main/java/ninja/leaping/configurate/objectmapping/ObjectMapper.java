@@ -19,7 +19,7 @@ package ninja.leaping.configurate.objectmapping;
 import com.google.common.base.Preconditions;
 import com.google.common.reflect.TypeToken;
 import ninja.leaping.configurate.ConfigurationNode;
-import ninja.leaping.configurate.commented.CommentedConfigurationNode;
+import ninja.leaping.configurate.component.comment.Comment;
 import ninja.leaping.configurate.objectmapping.serialize.TypeSerializer;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
@@ -120,8 +120,8 @@ public class ObjectMapper<T> {
                     serial.serialize(this.fieldType, fieldVal, node);
                 }
 
-                if (node instanceof CommentedConfigurationNode && this.comment != null && !this.comment.isEmpty()) {
-                    CommentedConfigurationNode commentNode = ((CommentedConfigurationNode) node);
+                if (node instanceof Comment && this.comment != null && !this.comment.isEmpty()) {
+                    Comment commentNode = ((Comment) node);
                     if (!commentNode.getComment().isPresent()) {
                         commentNode.setComment(this.comment);
                     }

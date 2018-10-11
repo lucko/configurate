@@ -17,7 +17,7 @@
 package ninja.leaping.configurate.xml;
 
 import com.google.common.io.Resources;
-import ninja.leaping.configurate.attributed.AttributedConfigurationNode;
+import ninja.leaping.configurate.component.attributes.Attributes;
 import ninja.leaping.configurate.loader.AtomicFiles;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -54,33 +54,33 @@ public class XMLConfigurationLoaderTest {
                 .setSource(() -> new BufferedReader(new InputStreamReader(url.openStream(), UTF_8)))
                 .setSink(AtomicFiles.createAtomicWriterFactory(saveTest, UTF_8)).build();
 
-        AttributedConfigurationNode node = loader.load();
+        Attributes node = loader.load();
 
         assertEquals("messages", node.getTagName());
         assertEquals("false", node.getAttribute("secret"));
         assertTrue(node.hasListChildren());
 
-        List<? extends AttributedConfigurationNode> notes = node.getChildrenList();
+        List<? extends Attributes> notes = node.getChildrenList();
         assertEquals(2, notes.size());
 
-        AttributedConfigurationNode firstNote = notes.get(0);
+        Attributes firstNote = notes.get(0);
         assertEquals("501", firstNote.getAttribute("id"));
         assertTrue(firstNote.hasMapChildren());
         assertFalse(firstNote.hasListChildren());
 
-        Map<Object, ? extends AttributedConfigurationNode> properties = firstNote.getChildrenMap();
+        Map<Object, ? extends Attributes> properties = firstNote.getChildrenMap();
         assertEquals("Tove", properties.get("to").getValue());
         assertEquals("Jani", properties.get("from").getValue());
         assertEquals("Don't forget me this weekend!", properties.get("body").getValue());
         assertEquals("heading", properties.get("heading").getTagName());
 
-        AttributedConfigurationNode secondNode = notes.get(1);
+        Attributes secondNode = notes.get(1);
         assertEquals("502", secondNode.getAttribute("id"));
         assertFalse(secondNode.hasMapChildren());
         assertTrue(secondNode.hasListChildren());
 
-        List<? extends AttributedConfigurationNode> subNodes = secondNode.getChildrenList();
-        for (AttributedConfigurationNode subNode : subNodes) {
+        List<? extends Attributes> subNodes = secondNode.getChildrenList();
+        for (Attributes subNode : subNodes) {
             if (subNode.getTagName().equals("heading")) {
                 assertEquals("true", subNode.getAttribute("bold"));
             }
@@ -103,18 +103,18 @@ public class XMLConfigurationLoaderTest {
                 .setSource(() -> new BufferedReader(new InputStreamReader(url.openStream(), UTF_8)))
                 .setSink(AtomicFiles.createAtomicWriterFactory(saveTest, UTF_8)).build();
 
-        AttributedConfigurationNode node = loader.load();
+        Attributes node = loader.load();
 
-        AttributedConfigurationNode list1 = node.getNode("list1");
+        Attributes list1 = node.getNode("list1");
         assertTrue(list1.hasListChildren());
 
-        AttributedConfigurationNode list2 = node.getNode("list2");
+        Attributes list2 = node.getNode("list2");
         assertTrue(list2.hasListChildren());
 
-        AttributedConfigurationNode map1 = node.getNode("map1");
+        Attributes map1 = node.getNode("map1");
         assertTrue(map1.hasMapChildren());
 
-        AttributedConfigurationNode map2 = node.getNode("map2");
+        Attributes map2 = node.getNode("map2");
         assertTrue(map2.hasMapChildren());
 
         // roundtrip!
@@ -134,7 +134,7 @@ public class XMLConfigurationLoaderTest {
                 .setSource(() -> new BufferedReader(new InputStreamReader(url.openStream(), UTF_8)))
                 .setSink(AtomicFiles.createAtomicWriterFactory(saveTest, UTF_8)).build();
 
-        AttributedConfigurationNode node = loader.createEmptyNode(
+        Attributes node = loader.createEmptyNode(
                 loader.getDefaultOptions().setHeader("test header\ndo multiple lines work\nyes they do!!")
         );
 

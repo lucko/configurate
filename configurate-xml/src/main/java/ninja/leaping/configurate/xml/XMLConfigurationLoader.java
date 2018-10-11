@@ -24,8 +24,8 @@ import com.google.common.collect.MultimapBuilder;
 import com.google.common.math.DoubleMath;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.ConfigurationOptions;
-import ninja.leaping.configurate.attributed.AttributedConfigurationNode;
-import ninja.leaping.configurate.attributed.SimpleAttributedConfigurationNode;
+import ninja.leaping.configurate.component.attributes.Attributes;
+import ninja.leaping.configurate.component.attributes.SimpleAttributes;
 import ninja.leaping.configurate.loader.AbstractConfigurationLoader;
 import ninja.leaping.configurate.loader.CommentHandler;
 import ninja.leaping.configurate.loader.CommentHandlers;
@@ -59,7 +59,7 @@ import java.util.Map;
  * A loader for XML (Extensible Markup Language), using the native javax library for parsing and
  * generation.
  */
-public class XMLConfigurationLoader extends AbstractConfigurationLoader<AttributedConfigurationNode> {
+public class XMLConfigurationLoader extends AbstractConfigurationLoader<Attributes> {
 
     /**
      * The property used to mark how many spaces should be used to indent.
@@ -258,7 +258,7 @@ public class XMLConfigurationLoader extends AbstractConfigurationLoader<Attribut
     }
 
     @Override
-    public void loadInternal(AttributedConfigurationNode node, BufferedReader reader) throws IOException {
+    public void loadInternal(Attributes node, BufferedReader reader) throws IOException {
         DocumentBuilder documentBuilder = newDocumentBuilder();
 
         Document document;
@@ -276,7 +276,7 @@ public class XMLConfigurationLoader extends AbstractConfigurationLoader<Attribut
         MAP, LIST
     }
 
-    private void readElement(Node from, AttributedConfigurationNode to) {
+    private void readElement(Node from, Attributes to) {
         NodeType type = null;
 
         // copy the name of the tag
@@ -343,7 +343,7 @@ public class XMLConfigurationLoader extends AbstractConfigurationLoader<Attribut
 
         // read out the elements
         for (Map.Entry<String, Node> entry : children.entries()) {
-            AttributedConfigurationNode child;
+            Attributes child;
             if (type == NodeType.MAP) {
                 child = to.getNode(entry.getKey());
             } else {
@@ -382,8 +382,8 @@ public class XMLConfigurationLoader extends AbstractConfigurationLoader<Attribut
         String tag = defaultTagName;
         Map<String, String> attributes = ImmutableMap.of();
 
-        if (node instanceof AttributedConfigurationNode) {
-            AttributedConfigurationNode attributedNode = ((AttributedConfigurationNode) node);
+        if (node instanceof Attributes) {
+            Attributes attributedNode = ((Attributes) node);
             tag = attributedNode.getTagName();
             attributes = attributedNode.getAttributes();
         }
@@ -413,10 +413,10 @@ public class XMLConfigurationLoader extends AbstractConfigurationLoader<Attribut
 
     @NonNull
     @Override
-    public AttributedConfigurationNode createEmptyNode(@NonNull ConfigurationOptions options) {
+    public Attributes createEmptyNode(@NonNull ConfigurationOptions options) {
         options = options.setAcceptedTypes(ImmutableSet.of(Double.class, Long.class,
                 Integer.class, Boolean.class, String.class, Number.class));
-        return SimpleAttributedConfigurationNode.root("root", options);
+        return SimpleAttributes.root("root", options);
     }
 
     private static Object parseValue(String value) {

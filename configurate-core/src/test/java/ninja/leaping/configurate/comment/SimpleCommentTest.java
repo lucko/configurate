@@ -14,24 +14,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ninja.leaping.configurate.commented;
+package ninja.leaping.configurate.comment;
 
 import org.junit.jupiter.api.Test;
+
+import ninja.leaping.configurate.component.comment.Comment;
+import ninja.leaping.configurate.component.comment.SimpleComment;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
-public class SimpleCommentedConfigurationNodeTest {
+public class SimpleCommentTest {
 
     @Test
     public void testCommentsTransferred() {
-        CommentedConfigurationNode subject = SimpleCommentedConfigurationNode.root();
-        CommentedConfigurationNode firstChild = subject.getNode("first");
+        Comment subject = SimpleComment.root();
+        Comment firstChild = subject.getNode("first");
         firstChild.setValue("test value");
         firstChild.setComment("Such comment. Very wow.");
 
 
-        CommentedConfigurationNode secondChild = subject.getNode("second");
+        Comment secondChild = subject.getNode("second");
         secondChild.setValue("test value's evil twin");
 
         assertFalse(secondChild.isVirtual());
@@ -43,14 +46,14 @@ public class SimpleCommentedConfigurationNodeTest {
 
     @Test
     public void testNestedCommentsTransferred() {
-        CommentedConfigurationNode subject = SimpleCommentedConfigurationNode.root();
-        CommentedConfigurationNode firstChild = subject.getNode("first");
-        CommentedConfigurationNode firstChildChild = firstChild.getNode("child");
+        Comment subject = SimpleComment.root();
+        Comment firstChild = subject.getNode("first");
+        Comment firstChildChild = firstChild.getNode("child");
         firstChildChild.setValue("test value");
         firstChildChild.setComment("Such comment. Very wow.");
 
 
-        CommentedConfigurationNode secondChild = subject.getNode("second");
+        Comment secondChild = subject.getNode("second");
         secondChild.setValue("test value's evil twin");
 
         assertFalse(secondChild.isVirtual());
@@ -62,8 +65,8 @@ public class SimpleCommentedConfigurationNodeTest {
 
     @Test
     public void testCommentsMerged() {
-        CommentedConfigurationNode source = SimpleCommentedConfigurationNode.root();
-        CommentedConfigurationNode target = SimpleCommentedConfigurationNode.root();
+        Comment source = SimpleComment.root();
+        Comment target = SimpleComment.root();
 
         source.getNode("no-value").setValue("a").setComment("yeah");
         source.getNode("existing-value-no-comment").setValue("orig").setComment("maybe");

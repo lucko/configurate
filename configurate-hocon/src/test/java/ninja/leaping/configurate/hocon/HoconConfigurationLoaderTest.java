@@ -22,7 +22,7 @@ import com.google.common.io.Resources;
 import com.typesafe.config.ConfigValue;
 import com.typesafe.config.ConfigValueFactory;
 import ninja.leaping.configurate.ConfigurationOptions;
-import ninja.leaping.configurate.commented.CommentedConfigurationNode;
+import ninja.leaping.configurate.component.comment.Comment;
 import ninja.leaping.configurate.loader.AtomicFiles;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -54,10 +54,10 @@ public class HoconConfigurationLoaderTest {
         HoconConfigurationLoader loader = HoconConfigurationLoader.builder()
                 .setSource(() -> new BufferedReader(new InputStreamReader(url.openStream(), UTF_8)))
                 .setSink(AtomicFiles.createAtomicWriterFactory(saveTest, UTF_8)).build();
-        CommentedConfigurationNode node = loader.load();
+        Comment node = loader.load();
         assertEquals("unicorn", node.getNode("test", "op-level").getValue());
         assertEquals("dragon", node.getNode("other", "op-level").getValue());
-        CommentedConfigurationNode testNode = node.getNode("test");
+        Comment testNode = node.getNode("test");
         assertEquals(" Test node", testNode.getComment().orElse(null));
         assertEquals("dog park", node.getNode("other", "location").getValue());
         loader.save(node);
@@ -72,7 +72,7 @@ public class HoconConfigurationLoaderTest {
                 .setPath(saveTo)
                 .setURL(getClass().getResource("/splitline-comment-input.conf"))
                 .build();
-        CommentedConfigurationNode node = loader.load();
+        Comment node = loader.load();
         System.out.println(node.getOptions().getHeader());
         loader.save(node);
 
@@ -85,7 +85,7 @@ public class HoconConfigurationLoaderTest {
         HoconConfigurationLoader loader = HoconConfigurationLoader.builder()
                 .setPath(saveTo)
                 .build();
-        CommentedConfigurationNode node = loader.createEmptyNode(ConfigurationOptions.defaults().setHeader("Hi! I am a header!\n" +
+        Comment node = loader.createEmptyNode(ConfigurationOptions.defaults().setHeader("Hi! I am a header!\n" +
                         "Look at meeeeeee!!!"));
         node.getNode("node").setComment("I have a comment").getNode("party").setValue("now");
 
@@ -101,7 +101,7 @@ public class HoconConfigurationLoaderTest {
         HoconConfigurationLoader loader = HoconConfigurationLoader.builder()
                 .setPath(saveTo).setURL(url).build();
 
-        CommentedConfigurationNode node = loader.createEmptyNode(ConfigurationOptions.defaults());
+        Comment node = loader.createEmptyNode(ConfigurationOptions.defaults());
         node.getNode("test", "third").setValue(false).setComment("really?");
         node.getNode("test", "apple").setComment("fruit").setValue(false);
         node.getNode("test", "donut").setValue(true).setComment("tasty");

@@ -31,8 +31,8 @@ import com.typesafe.config.ConfigValue;
 import com.typesafe.config.ConfigValueFactory;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.ConfigurationOptions;
-import ninja.leaping.configurate.commented.CommentedConfigurationNode;
-import ninja.leaping.configurate.commented.SimpleCommentedConfigurationNode;
+import ninja.leaping.configurate.component.comment.Comment;
+import ninja.leaping.configurate.component.comment.SimpleComment;
 import ninja.leaping.configurate.loader.AbstractConfigurationLoader;
 import ninja.leaping.configurate.loader.CommentHandler;
 import ninja.leaping.configurate.loader.CommentHandlers;
@@ -52,7 +52,7 @@ import java.util.regex.Pattern;
  * A loader for HOCON (Hodor)-formatted configurations, using the typesafe config library for
  * parsing and generation.
  */
-public class HoconConfigurationLoader extends AbstractConfigurationLoader<CommentedConfigurationNode> {
+public class HoconConfigurationLoader extends AbstractConfigurationLoader<Comment> {
 
     /**
      * The pattern used to match newlines.
@@ -170,7 +170,7 @@ public class HoconConfigurationLoader extends AbstractConfigurationLoader<Commen
     }
 
     @Override
-    public void loadInternal(CommentedConfigurationNode node, BufferedReader reader) throws IOException {
+    public void loadInternal(Comment node, BufferedReader reader) throws IOException {
         Config hoconConfig = ConfigFactory.parseReader(reader, parse);
         hoconConfig = hoconConfig.resolve();
         for (Map.Entry<String, ConfigValue> ent : hoconConfig.root().entrySet()) {
@@ -178,7 +178,7 @@ public class HoconConfigurationLoader extends AbstractConfigurationLoader<Commen
         }
     }
 
-    private static void readConfigValue(ConfigValue value, CommentedConfigurationNode node) {
+    private static void readConfigValue(ConfigValue value, Comment node) {
         if (!value.origin().comments().isEmpty()) {
             node.setComment(CRLF_MATCH.matcher(Joiner.on('\n').join(value.origin().comments())).replaceAll(""));
         }
@@ -238,8 +238,8 @@ public class HoconConfigurationLoader extends AbstractConfigurationLoader<Commen
         } else {
             ret = ConfigValueFactory.fromAnyRef(node.getValue(), "configurate-hocon");
         }
-        if (node instanceof CommentedConfigurationNode) {
-            CommentedConfigurationNode commentedNode = ((CommentedConfigurationNode) node);
+        if (node instanceof Comment) {
+            Comment commentedNode = ((Comment) node);
             final ConfigValue finalRet = ret;
             ret = commentedNode.getComment().map(comment -> finalRet.withOrigin(finalRet.origin().withComments(LINE_SPLITTER.splitToList(comment)))).orElse(ret);
         }
@@ -265,10 +265,10 @@ public class HoconConfigurationLoader extends AbstractConfigurationLoader<Commen
 
     @NonNull
     @Override
-    public CommentedConfigurationNode createEmptyNode(@NonNull ConfigurationOptions options) {
+    public Comment createEmptyNode(@NonNull ConfigurationOptions options) {
         options = options.setAcceptedTypes(ImmutableSet.of(Map.class, List.class, Double.class,
                 Long.class, Integer.class, Boolean.class, String.class, Number.class));
-        return SimpleCommentedConfigurationNode.root(options);
+        return SimpleComment.root(options);
     }
 
     // -- Comment handling -- this might have to be updated as the hocon dep changes (But tests should detect this

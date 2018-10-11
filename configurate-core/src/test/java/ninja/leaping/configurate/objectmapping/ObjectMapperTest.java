@@ -18,8 +18,8 @@ package ninja.leaping.configurate.objectmapping;
 
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.SimpleConfigurationNode;
-import ninja.leaping.configurate.commented.CommentedConfigurationNode;
-import ninja.leaping.configurate.commented.SimpleCommentedConfigurationNode;
+import ninja.leaping.configurate.component.comment.Comment;
+import ninja.leaping.configurate.component.comment.SimpleComment;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -87,7 +87,7 @@ public class ObjectMapperTest {
 
     @Test
     public void testCommentsApplied() throws ObjectMappingException {
-        CommentedConfigurationNode node = SimpleCommentedConfigurationNode.root();
+        Comment node = SimpleComment.root();
         ObjectMapper<CommentedObject>.BoundInstance mapper = ObjectMapper.forClass(CommentedObject.class).bindToNew();
         CommentedObject obj = mapper.populate(node);
         obj.color = "fuchsia";
@@ -161,7 +161,7 @@ public class ObjectMapperTest {
 
     @Test
     public void testNestedObjectWithComments() throws ObjectMappingException {
-        CommentedConfigurationNode node = SimpleCommentedConfigurationNode.root();
+        Comment node = SimpleComment.root();
         final ObjectMapper<ParentObject>.BoundInstance mapper = ObjectMapper.forObject(new ParentObject());
         mapper.populate(node);
         assertEquals("Comment on parent", node.getNode("inner").getComment().get());
@@ -191,7 +191,7 @@ public class ObjectMapperTest {
 
     @Test
     public void testInterfaceSerialization() throws ObjectMappingException {
-        CommentedConfigurationNode node = SimpleCommentedConfigurationNode.root();
+        Comment node = SimpleComment.root();
 
         final ChildObject childObject = new ChildObject();
         childObject.test = "Changed value";
