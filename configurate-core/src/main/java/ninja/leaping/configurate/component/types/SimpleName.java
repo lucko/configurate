@@ -14,39 +14,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ninja.leaping.configurate.component.comment;
+package ninja.leaping.configurate.component.types;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-final class SimpleComment implements Comment {
-    static final Comment NO_COMMENT = new SimpleComment(null);
+final class SimpleName implements Name {
+    static final Name UNNAMED = new SimpleName(null);
 
-    private final String comment;
+    private final String name;
 
-    SimpleComment(String comment) {
-        this.comment = comment;
+    SimpleName(String name) {
+        this.name = name;
     }
 
     @Override
     public @Nullable String getValue() {
-        return this.comment;
+        return this.name;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Comment)) return false;
-        Comment that = (Comment) o;
-        return this.comment != null ? this.comment.equals(that.getValue()) : that.getValue() == null;
+        if (!(o instanceof Name)) return false;
+        Name that = (Name) o;
+        return this.name != null ? this.name.equals(that.getValue()) : that.getValue() == null;
     }
 
     @Override
     public int hashCode() {
-        return this.comment != null ? this.comment.hashCode() : 0;
+        return this.name != null ? this.name.hashCode() : 0;
     }
 
     @Override
     public String toString() {
-        return "Comment{value=" + this.comment + '}';
+        return "Name{value=" + this.name + '}';
     }
 }

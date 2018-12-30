@@ -24,7 +24,7 @@ import com.google.common.collect.MultimapBuilder;
 import com.google.common.math.DoubleMath;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.ConfigurationOptions;
-import ninja.leaping.configurate.component.attributes.Attributes;
+import ninja.leaping.configurate.component.types.Attributes;
 import ninja.leaping.configurate.component.attributes.SimpleAttributes;
 import ninja.leaping.configurate.loader.AbstractConfigurationLoader;
 import ninja.leaping.configurate.loader.CommentHandler;

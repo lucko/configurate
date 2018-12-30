@@ -18,7 +18,7 @@ package ninja.leaping.configurate;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterators;
-import ninja.leaping.configurate.component.comment.Comment;
+import ninja.leaping.configurate.component.types.Comment;
 import ninja.leaping.configurate.component.comment.SimpleComment;
 import ninja.leaping.configurate.util.ConfigurationNodeWalker;
 import org.junit.jupiter.api.Test;

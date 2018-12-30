@@ -22,7 +22,7 @@ import com.google.common.io.Resources;
 import com.typesafe.config.ConfigValue;
 import com.typesafe.config.ConfigValueFactory;
 import ninja.leaping.configurate.ConfigurationOptions;
-import ninja.leaping.configurate.component.comment.Comment;
+import ninja.leaping.configurate.component.types.Comment;
 import ninja.leaping.configurate.loader.AtomicFiles;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -14,17 +14,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ninja.leaping.configurate.component.attributes;
+package ninja.leaping.configurate.component.types;
 
 import com.google.common.collect.ImmutableMap;
 
-import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.component.NodeComponent;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 

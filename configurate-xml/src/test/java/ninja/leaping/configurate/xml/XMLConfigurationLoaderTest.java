@@ -17,7 +17,7 @@
 package ninja.leaping.configurate.xml;
 
 import com.google.common.io.Resources;
-import ninja.leaping.configurate.component.attributes.Attributes;
+import ninja.leaping.configurate.component.types.Attributes;
 import ninja.leaping.configurate.loader.AtomicFiles;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

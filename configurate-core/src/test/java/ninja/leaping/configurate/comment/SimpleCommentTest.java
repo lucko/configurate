@@ -18,7 +18,7 @@ package ninja.leaping.configurate.comment;
 
 import org.junit.jupiter.api.Test;
 
-import ninja.leaping.configurate.component.comment.Comment;
+import ninja.leaping.configurate.component.types.Comment;
 import ninja.leaping.configurate.component.comment.SimpleComment;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

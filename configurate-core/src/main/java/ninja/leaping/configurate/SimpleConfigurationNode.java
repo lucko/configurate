@@ -27,6 +27,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import ninja.leaping.configurate.objectmapping.serialize.TypeSerializer;
+import ninja.leaping.configurate.value.ValueType;
 
 import java.util.Collection;
 import java.util.Collections;

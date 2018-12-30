@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ninja.leaping.configurate.component.attributes;
+package ninja.leaping.configurate.component.types;
 
 import com.google.common.collect.ImmutableMap;
 

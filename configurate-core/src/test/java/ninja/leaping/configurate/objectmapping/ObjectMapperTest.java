@@ -18,7 +18,7 @@ package ninja.leaping.configurate.objectmapping;
 
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.SimpleConfigurationNode;
-import ninja.leaping.configurate.component.comment.Comment;
+import ninja.leaping.configurate.component.types.Comment;
 import ninja.leaping.configurate.component.comment.SimpleComment;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 import org.junit.jupiter.api.Assertions;

@@ -14,10 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ninja.leaping.configurate;
+package ninja.leaping.configurate.value;
+
+import ninja.leaping.configurate.ConfigurationNode;
 
 /**
- * An enumeration of the types of value a {@link ConfigurationNode} can hold.
+ * An enumeration of the types of {@link Value}.
  */
 public enum ValueType {
 

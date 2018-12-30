@@ -20,6 +20,8 @@ import com.google.common.base.Objects;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+import ninja.leaping.configurate.value.ValueType;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentMap;

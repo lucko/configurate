@@ -31,7 +31,7 @@ import com.typesafe.config.ConfigValue;
 import com.typesafe.config.ConfigValueFactory;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.ConfigurationOptions;
-import ninja.leaping.configurate.component.comment.Comment;
+import ninja.leaping.configurate.component.types.Comment;
 import ninja.leaping.configurate.component.comment.SimpleComment;
 import ninja.leaping.configurate.loader.AbstractConfigurationLoader;
 import ninja.leaping.configurate.loader.CommentHandler;

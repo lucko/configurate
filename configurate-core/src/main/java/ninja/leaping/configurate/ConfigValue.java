@@ -19,6 +19,8 @@ package ninja.leaping.configurate;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+import ninja.leaping.configurate.value.ValueType;
+
 import java.util.Iterator;
 
 /**

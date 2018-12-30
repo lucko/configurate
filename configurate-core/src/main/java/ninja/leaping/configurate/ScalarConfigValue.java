@@ -21,6 +21,8 @@ import com.google.common.base.Preconditions;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+import ninja.leaping.configurate.value.ValueType;
+
 import java.util.Collections;
 
 /**
